@@ -11,7 +11,7 @@ public class CoreApplication {
 
 	public static void main(String[] args) {
 
-		Member member = new Member(1L, "홍길동", "VIP");
+		Member member = new Member(1L, "홍길동", "BASIC");
 
 		MemberService memberService = new MemberServiceImpl();
 
