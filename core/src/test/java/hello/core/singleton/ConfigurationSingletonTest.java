@@ -8,6 +8,7 @@ import hello.core.order.OrderService;
 import hello.core.order.OrderServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class ConfigurationSingletonTest {
@@ -29,5 +30,12 @@ public class ConfigurationSingletonTest {
 
 		Assertions.assertEquals(memberRepository1, memberRepository);
 		Assertions.assertEquals(memberRepository2, memberRepository);
+	}
+
+	@Test
+	void ConfigurationDeep() {
+		ApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+		AppConfig bean = ac.getBean(AppConfig.class);
+		System.out.println("bean ==> " + bean.getClass());
 	}
 }
