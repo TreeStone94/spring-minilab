@@ -25,11 +25,11 @@ public class OrderServiceImpl implements OrderService {
 //        System.out.println("discountPolicy = " + discountPolicy);
 //         this.discountPolicy = discountPolicy;
 //    }
-//    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-//        System.out.println("memberRepository = " + memberRepository + ", discountPolicy = " + discountPolicy);
-//        this.memberRepository = memberRepository;
-//        this.discountPolicy = discountPolicy;
-//    }
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        System.out.println("memberRepository = " + memberRepository + ", discountPolicy = " + discountPolicy);
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Autowired
     public void init(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
