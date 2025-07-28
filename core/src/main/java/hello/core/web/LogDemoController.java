@@ -22,7 +22,7 @@ public class LogDemoController {
 		MyLogger myLogger = myLoggerProvider.getObject();
 		myLogger.setRequestURL(requestURL);
 
-		myLogger.log("controller test");
+		myLogger.log("controller test!!");
 		Thread.sleep(1000);
 		logDemoService.logic("testId");
 		return "OK";
