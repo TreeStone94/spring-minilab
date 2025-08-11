@@ -1,0 +1,19 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Kafka client 로그 레벨 제한 -->
+    <logger name="org.apache.kafka.clients.consumer" level="INFO" />
+    <logger name="org.apache.kafka.clients.FetchSessionHandler" level="INFO" />
+    <logger name="org.apache.kafka.clients.NetworkClient" level="INFO" />
+    <logger name="org.apache.kafka.clients.Metadata" level="INFO" />
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
