@@ -1,0 +1,32 @@
+spring:
+  jta:
+    atomikos:
+      datasource:
+        mysql:
+          xa-data-source-class-name: com.mysql.cj.jdbc.MysqlXADataSource
+          xa-properties:
+            url: jdbc:mysql://localhost:3306/common
+            user: admin
+            password: admin1!
+          max-pool-size: 5
+        postgresql:
+          xa-data-source-class-name: org.postgresql.xa.PGXADataSource
+          xa-properties:
+            url: jdbc:postgresql://localhost:5432/common
+            user: admin
+            password: admin1!
+          max-pool-size: 5
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        transaction.jta.platform: com.atomikos.icatch.jta.AtomikosJtaPlatform
+        temp:
+          use_jdbc_metadata_defaults: false
+        javax:
+          persistence:
+            transaction: JTA

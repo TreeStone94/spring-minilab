@@ -19,9 +19,20 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // JTA Atomikos - 직접 의존성 추가
+    implementation 'com.atomikos:transactions-spring-boot-starter:5.0.9'
+    implementation 'com.atomikos:transactions-jdbc:5.0.9'
+    implementation 'com.atomikos:transactions-jta:5.0.9'
+
+    // Database Drivers
+    runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
