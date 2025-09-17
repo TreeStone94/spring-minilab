@@ -72,14 +72,14 @@ class CourseTest {
 
 			// 같은 내용을 조회할 경우 쿼리가 생성되지 않음.
 			// 우선 1차 캐시 조회 후, 데이터가 없을 경우에만 DB에 쿼리를 날리기 때문.
-			Course course1 = em.find(Course.class, 1);
+			Course course1 = em.find(Course.class, 1L);
 			System.out.println("course1.getId() = " + course1.getId());
 			System.out.println("course1.getTitle() = " + course1.getTitle());
 			System.out.println("course1.getInstructor() = " + course1.getInstructor());
 
 			System.out.println("(course == course1) = " + (course == course1));
 
-			Course course3 = em.find(Course.class, 2);
+			Course course3 = em.find(Course.class, 2L);
 			System.out.println("course3.getId() = " + course3.getId());
 			System.out.println("course3.getTitle() = " + course3.getTitle());
 			System.out.println("course3.getInstructor() = " + course3.getInstructor());
