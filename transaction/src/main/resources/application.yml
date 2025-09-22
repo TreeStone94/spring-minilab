@@ -1,16 +1,35 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/common?currentSchema=common
-    username: admin
-    password: admin1!
-    driver-class-name: org.postgresql.Driver
+  # 전역 JTA 트랜잭션 매니저 설정 (Atomikos)
+  jta:
+    atomikos:
+      datasource:
+        # 주문 DB: MySQL 설정 (XA)
+        order-db:
+          # MySQL용 XA DataSource 클래스
+          xa-data-source-class-name: com.mysql.cj.jdbc.MysqlXADataSource
+          xa-properties:
+            user: admin      # MySQL 사용자 이름
+            password: admin1!  # MySQL 비밀번호
+            # XA를 위해 pinGlobalTxToPhysicalConnection=true 추가
+            url: jdbc:mysql://localhost:3306/market
+          unique-resource-name: orderDB_mysql # 고유 리소스 이름
+          min-pool-size: 5
+          max-pool-size: 10
 
+        # 배송 DB: PostgreSQL 설정 (XA)
+        delivery-db:
+          # PostgreSQL용 XA DataSource 클래스
+          xa-data-source-class-name: org.postgresql.xa.PGXADataSource
+          xa-properties:
+            user: admin   # PostgreSQL 사용자 이름
+            password: admin1! # PostgreSQL 비밀번호
+            url: jdbc:postgresql://localhost:5432/common?currentSchema=common
+          unique-resource-name: deliveryDB_postgres # 고유 리소스 이름
+          min-pool-size: 5
+          max-pool-size: 10
   jpa:
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    # JPA 설정은 그대로 사용 가능
     hibernate:
-      ddl-auto: update  # create, create-drop, validate, none 중 선택
+      hbm2ddl:
+        auto: create-drop # 개발 환경에서는 create-drop 사용
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
