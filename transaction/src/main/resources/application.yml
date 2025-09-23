@@ -1,35 +1,34 @@
 spring:
-  # 전역 JTA 트랜잭션 매니저 설정 (Atomikos)
+  # JTA Atomikos 설정
   jta:
     atomikos:
       datasource:
-        # 주문 DB: MySQL 설정 (XA)
+        # 주문 DB: MySQL 설정
         order-db:
-          # MySQL용 XA DataSource 클래스
           xa-data-source-class-name: com.mysql.cj.jdbc.MysqlXADataSource
+          unique-resource-name: orderDB_mysql
           xa-properties:
-            user: admin      # MySQL 사용자 이름
-            password: admin1!  # MySQL 비밀번호
-            # XA를 위해 pinGlobalTxToPhysicalConnection=true 추가
-            url: jdbc:mysql://localhost:3306/market
-          unique-resource-name: orderDB_mysql # 고유 리소스 이름
-          min-pool-size: 5
-          max-pool-size: 10
+            user: admin
+            password: admin1!
+            url: jdbc:mysql://localhost:3306/common
 
-        # 배송 DB: PostgreSQL 설정 (XA)
+        # 배송 DB: PostgreSQL 설정
         delivery-db:
-          # PostgreSQL용 XA DataSource 클래스
           xa-data-source-class-name: org.postgresql.xa.PGXADataSource
+          unique-resource-name: deliveryDB_postgres
           xa-properties:
-            user: admin   # PostgreSQL 사용자 이름
-            password: admin1! # PostgreSQL 비밀번호
-            url: jdbc:postgresql://localhost:5432/common?currentSchema=common
-          unique-resource-name: deliveryDB_postgres # 고유 리소스 이름
-          min-pool-size: 5
-          max-pool-size: 10
+            user: admin
+            password: admin1!
+            url: jdbc:postgresql://localhost:5432/common
+
+  # JPA 설정 (정확한 들여쓰기)
   jpa:
-    # JPA 설정은 그대로 사용 가능
+    # 1. Spring Boot가 직접 관리하는 핵심 설정 그룹
     hibernate:
-      hbm2ddl:
-        auto: create-drop # 개발 환경에서는 create-drop 사용
+      ddl-auto: create-drop
     show-sql: true
+
+    # 2. Hibernate에 그대로 전달되는 부가 설정 그룹
+    properties:
+      hibernate:
+        format_sql: true
