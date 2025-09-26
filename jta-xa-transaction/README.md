@@ -21,7 +21,7 @@
     max_prepared_transactions = 100 # 기본값은 0, 트랜잭션 수에 맞게 조절
     ```
     
-1. JPA 설정파일 필요
+2. JPA 설정파일 필요
     
     **수동 설정의 우선순위**: 개발자가 `EntityManagerFactory` Bean을 직접 생성하면, Spring Boot는 "개발자가 알아서 하겠지"라고 판단하고 `application.yml`의 JPA 설정을 자동으로 적용해주지 않습니다.
     
@@ -38,3 +38,30 @@
     - `LocalContainerEntityManagerFactoryBean`: JPA의 `EntityManagerFactory`를 생성합니다. `setJtaDataSource()`를 통해 JTA 트랜잭션에 참여할 데이터소스를 지정하는 것이 중요합니다.
     - `hibernate.transaction.jta.platform`: Hibernate가 JTA 트랜잭션 매니저(여기서는 Atomikos)와 통신할 수 있도록 플랫폼을 지정합니다.
     - `javax.persistence.transactionType`: JPA가 JTA 트랜잭션을 사용하도록 명시합니다.
+
+## 로그확인
+
+TM과 RM이 서로 상호작용하면서 준비, 커밋/롤백을 하고 있는데 상세하게 확인해보겠습니다.
+
+### 성공
+
+RM 주문(mysql), 배송(postgresql)이 정상적으로 성공되었다면 mysql과 postgresql 서버로그에서는 명령어 실행이후 준비(Prepare) 완료 명령어를 TM atomikos에게 보내어 TM은 모든 RM에게 준비가 완료되었다는 받았다면 TM이 commit명령어를 호출하여 RM에게 보냅니다.
+
+![Spring log](./asserts/images/01.png)
+_Spring log_
+
+![Spring log](./asserts/images/02.png)
+_MySQL log_
+
+![Spring log](./asserts/images/03.png)
+_PostgreSQL log_
+
+### 실패
+
+실패 분산 트랜잭션에 롤백 경우에는 주문(mysql)이 성공이후 에러가 발생하였다면 TM은 RM에게 rollback명령어를 보냅니다.
+
+![Spring log](./asserts/images/04.png)
+_Spring log_
+
+![Spring log](./asserts/images/05.png)
+_MySQL log_

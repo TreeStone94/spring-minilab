@@ -32,3 +32,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+logging:
+  level:
+    # Atomikos의 동작을 상세히 보려면 DEBUG 또는 TRACE로 설정
+    com.atomikos: DEBUG
+    # Hibernate가 JTA 트랜잭션에 어떻게 참여하는지 보려면 TRACE로 설정
+    org.hibernate.resource.transaction: TRACE
