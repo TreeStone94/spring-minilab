@@ -1,4 +1,4 @@
-package com.example.order;
+package com.example.dto;
 
 public record OrderRequestDto(
 		Long productId,
