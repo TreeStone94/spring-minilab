@@ -12,7 +12,7 @@ public class PaymentConsumer {
 
     private final OrderService orderService;
 
-    @KafkaListener(topics = "${app.kafka.topic.payment-events}", groupId = "order-group")
+    @KafkaListener(topics = "${app.kafka.topic.payment-events}")
     public void consume(PaymentEvent event) {
         System.out.println("Received payment event: " + event.status() + " for order ID: " + event.overId());
         orderService.updateOrderStatus(event.overId(), event.status());
