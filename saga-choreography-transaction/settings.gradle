@@ -1,0 +1,6 @@
+rootProject.name = "saga-example"
+
+// 앞으로 생성할 하위 모듈들을 여기에 선언합니다.
+include("order-service")
+include("payment-service")
+include("saga-orchestrator")
