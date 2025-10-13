@@ -1,8 +1,8 @@
 package com.example.order.service;
 
-import com.example.dto.OrderCreatedEvent;
-import com.example.dto.OrderRequestDto;
-import com.example.order.entity.OrderStatus;
+import com.example.order.dto.OrderCreatedEvent;
+import com.example.order.dto.OrderRequestDto;
+import com.example.order.enums.OrderStatus;
 import com.example.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

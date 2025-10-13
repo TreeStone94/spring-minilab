@@ -1,12 +1,12 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/order?currentSchema=order
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/payment
     username: admin
     password: admin1!
-    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,14 +20,14 @@ spring:
         spring.json.add.type.headers: false
     consumer:
       bootstrap-servers: localhost:9092
-      group-id: order-group
+      group-id: payment-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trust.packages: "*"
         spring.json.use.type.headers: false
-        spring.json.value.default.type: com.example.order.dto.PaymentEvent
+        spring.json.value.default.type: com.example.payment.dto.OrderEvent
 
 
 app:

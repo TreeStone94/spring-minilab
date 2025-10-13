@@ -1,6 +1,6 @@
 package com.example.order.kafka;
 
-import com.example.dto.PaymentEvent;
+import com.example.order.dto.PaymentEvent;
 import com.example.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
