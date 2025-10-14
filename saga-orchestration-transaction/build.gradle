@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.6' apply false // false: 하위 모듈에서 직접 적용
+    id 'io.spring.dependency-management' version '1.1.7' apply false
+}
+
+// 모든 하위 프로젝트(order-service 등)에 적용될 공통 설정
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.example' // 공통 그룹 ID
+    version = '0.0.1-SNAPSHOT' // 공통 버전
+    sourceCompatibility = '17' // 자바 버전
+
+    repositories {
+        mavenCentral()
+    }
+
+    // 의존성 버전 관리: 하위 모듈에서는 버전을 명시할 필요가 없음
+    dependencyManagement {
+        imports {
+            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+        }
+    }
+
+    dependencies {
+        // 모든 모듈이 공통으로 사용하는 의존성
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.kafka:spring-kafka'
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.kafka:spring-kafka-test'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    }
+}
