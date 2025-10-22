@@ -24,7 +24,7 @@ public class SagaOrchestrator {
 		sagaState.setStatus(SagaState.SagaStatus.PROCESSING_ORDER);
 		SagaState savedSagaState = sagaStateRepository.save(sagaState);
 
-		ServiceRequest orderCommand = new ServiceRequest("CREATE_ORDER", sagaState.getSagaId(), savedSagaState.getProductId(), savedSagaState.getQuantity());
+		OrderServiceRequest orderCommand = new OrderServiceRequest("CREATE_ORDER", sagaState.getSagaId(), savedSagaState.getProductId(), savedSagaState.getQuantity());
 		orchestratorProducer.sendToOrderService(orderCommand);
 		log.error("Saga started. SagaId: {}", savedSagaState.getSagaId());
 	}
@@ -43,7 +43,7 @@ public class SagaOrchestrator {
 			sagaStateRepository.save(sagaState);
 
 			log.error("Order created, processing payment for sagaId: {}", reply.sagaId());
-			ServiceRequest paymentCommand = new ServiceRequest("PROCESS_PAYMENT", reply.sagaId(), sagaState.getProductId(), sagaState.getQuantity());
+			PaymentServiceRequest paymentCommand = new PaymentServiceRequest("PROCESS_PAYMENT", reply.sagaId(), sagaState.getProductId());
 			orchestratorProducer.sendToPaymentService(paymentCommand);
 		} else {
 			// 주문 실패 -> Saga 실패 상태로 변경
@@ -64,16 +64,16 @@ public class SagaOrchestrator {
            sagaState.setStatus(SagaState.SagaStatus.PROCESSING_STOCK);
            sagaStateRepository.save(sagaState);
 
-           log.error("Payment processed, decreasing stock for sagaId: {}" + reply.sagaId());
-           ServiceRequest stockCommand = new ServiceRequest("DECREASE_STOCK", reply.sagaId(), sagaState.getProductId(), sagaState.getQuantity());
+           log.error("Payment processed, decreasing stock for sagaId: {}", reply.sagaId());
+           StockServiceRequest stockCommand = new StockServiceRequest("DECREASE_STOCK", reply.sagaId(), sagaState.getProductId(), sagaState.getQuantity());
 	       orchestratorProducer.sendToStockService(stockCommand);
        } else {
            // 결제 실패 -> 상태 변경 및 주문 취소(보상) 요청
            sagaState.setStatus(SagaState.SagaStatus.COMPENSATING_ORDER);
            sagaStateRepository.save(sagaState);
 
-           log.error("Payment failed, compensating order for sagaId: {}" + reply.sagaId());
-           ServiceRequest orderCommand = new ServiceRequest("CANCEL_ORDER", reply.sagaId(), null, 0);
+           log.error("Payment failed, compensating order for sagaId: {}", reply.sagaId());
+           OrderServiceRequest orderCommand = new OrderServiceRequest("CANCEL_ORDER", reply.sagaId(), null, 0);
 	       orchestratorProducer.sendToOrderService(orderCommand);
        }
    }
@@ -88,18 +88,18 @@ public class SagaOrchestrator {
 			// 재고 감소 성공 -> Saga 완료
 			sagaState.setStatus(SagaState.SagaStatus.COMPLETED);
 			sagaStateRepository.save(sagaState);
-			System.out.println("Saga completed successfully for sagaId: " + reply.sagaId());
+			log.error("Saga completed successfully for sagaId: {}", reply.sagaId());
 		} else {
 			// 재고 부족 -> 상태 변경 및 결제 환불(보상) 요청
 			sagaState.setStatus(SagaState.SagaStatus.COMPENSATING_PAYMENT);
 			sagaStateRepository.save(sagaState);
 
-			log.error("Stock failed, compensating payment and order for sagaId: {}" + reply.sagaId());
-			ServiceRequest paymentCommand = new ServiceRequest("REFUND_PAYMENT", reply.sagaId(), null, 0);
+			log.error("Stock failed, compensating payment and order for sagaId: {}", reply.sagaId());
+			PaymentServiceRequest paymentCommand = new PaymentServiceRequest("REFUND_PAYMENT", reply.sagaId(), null);
 			orchestratorProducer.sendToPaymentService(paymentCommand);
 			// 결제 환불 후 주문 취소는 Payment 서비스의 보상 트랜잭션이 완료된 후에 진행할 수도 있으나,
 			// 이 예제에서는 단순화를 위해 바로 요청합니다.
-			ServiceRequest orderCommand = new ServiceRequest("CANCEL_ORDER", reply.sagaId(), null, 0);
+			OrderServiceRequest orderCommand = new OrderServiceRequest("CANCEL_ORDER", reply.sagaId(), null, 0);
 			orchestratorProducer.sendToOrderService(orderCommand);
 		}
 	}

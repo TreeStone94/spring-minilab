@@ -20,17 +20,17 @@ public class PaymentConsumer {
     public void listenOrderCreated(OrderCreatedEvent event) {
         log.info("Received order created event: {}", event);
         try {
-            paymentService.processPayment(event.getOrderId(), event.getAmount());
+            paymentService.processPayment(event.orderId(), event.amount());
 
             // Simulate checking payment status after processing
-            Payment.PaymentStatus status = event.getAmount() > 1000 ? Payment.PaymentStatus.FAILED : Payment.PaymentStatus.SUCCESSFUL;
+            Payment.PaymentStatus status = event.amount() > 1000 ? Payment.PaymentStatus.FAILED : Payment.PaymentStatus.SUCCESSFUL;
 
-            paymentProducer.sendPaymentProcessedEvent(event.getOrderId(), status.name());
+            paymentProducer.sendPaymentProcessedEvent(event.orderId(), status.name());
 
         } catch (Exception e) {
-            log.error("Failed to process payment for order {}", event.getOrderId(), e);
+            log.error("Failed to process payment for order {}", event.orderId(), e);
             // Optionally, send a payment failed event
-            paymentProducer.sendPaymentProcessedEvent(event.getOrderId(), Payment.PaymentStatus.FAILED.name());
+            paymentProducer.sendPaymentProcessedEvent(event.orderId(), Payment.PaymentStatus.FAILED.name());
         }
     }
 }
