@@ -2,7 +2,7 @@ package com.example.payment.dto;
 
 
 
-public record PaymentProcessedEvent (
-    Long orderId,
+public record PaymentReply(
+    Long sagaId,
     String status
 ) {}

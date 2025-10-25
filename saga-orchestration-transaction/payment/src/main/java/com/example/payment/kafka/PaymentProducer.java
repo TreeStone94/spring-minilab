@@ -1,6 +1,6 @@
 package com.example.payment.kafka;
 
-import com.example.payment.dto.PaymentProcessedEvent;
+import com.example.payment.dto.PaymentReply;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,9 +13,8 @@ public class PaymentProducer {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void sendPaymentProcessedEvent(Long orderId, String status) {
-        PaymentProcessedEvent event = new PaymentProcessedEvent(orderId, status);
-        log.info("Sending payment processed event: {}", event);
-        kafkaTemplate.send("payment-replies", event);
+    public void sendPaymentProcessedEvent(PaymentReply paymentReply) {
+        log.info("Sending payment processed event: {}", paymentReply);
+        kafkaTemplate.send("payment-replies", paymentReply);
     }
 }

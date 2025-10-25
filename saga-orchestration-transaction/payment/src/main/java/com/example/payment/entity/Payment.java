@@ -12,11 +12,8 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
-
-    private Long orderId;
-
-    private double amount;
+    private Long paymentId;
+    private Long sagaId;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
@@ -24,6 +21,7 @@ public class Payment {
     public enum PaymentStatus {
         PENDING,
         SUCCESSFUL,
-        FAILED
+        FAILED,
+        REFUNDED
     }
 }

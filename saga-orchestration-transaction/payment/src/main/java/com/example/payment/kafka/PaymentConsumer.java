@@ -1,7 +1,6 @@
 package com.example.payment.kafka;
 
-import com.example.payment.dto.OrderCreatedEvent;
-import com.example.payment.entity.Payment;
+import com.example.payment.dto.PaymentRequest;
 import com.example.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,23 +13,15 @@ import org.springframework.stereotype.Component;
 public class PaymentConsumer {
 
     private final PaymentService paymentService;
-    private final PaymentProducer paymentProducer;
 
     @KafkaListener(topics = "payment-requests")
-    public void listenOrderCreated(OrderCreatedEvent event) {
-        log.info("Received order created event: {}", event);
-        try {
-            paymentService.processPayment(event.orderId(), event.amount());
+    public void handlePaymentRequest(PaymentRequest event) {
 
-            // Simulate checking payment status after processing
-            Payment.PaymentStatus status = event.amount() > 1000 ? Payment.PaymentStatus.FAILED : Payment.PaymentStatus.SUCCESSFUL;
-
-            paymentProducer.sendPaymentProcessedEvent(event.orderId(), status.name());
-
-        } catch (Exception e) {
-            log.error("Failed to process payment for order {}", event.orderId(), e);
-            // Optionally, send a payment failed event
-            paymentProducer.sendPaymentProcessedEvent(event.orderId(), Payment.PaymentStatus.FAILED.name());
+        if("PROCESS_PAYMENT".equals(event.command())) {
+            paymentService.processPayment(event);
+        } else {
+            paymentService.refundPayment(event);
         }
+
     }
 }

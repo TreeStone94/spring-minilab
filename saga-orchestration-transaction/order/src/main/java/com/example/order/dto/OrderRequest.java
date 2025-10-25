@@ -1,9 +1,8 @@
 package com.example.order.dto;
 
-public record ServiceRequest(
+public record OrderRequest(
 		String command,
 		Long sagaId,
-		Long orderId,
 		Long productId,
 		Integer quantity
 ) {

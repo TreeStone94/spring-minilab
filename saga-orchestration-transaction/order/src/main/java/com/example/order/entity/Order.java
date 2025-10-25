@@ -2,6 +2,8 @@ package com.example.order.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.aspectj.weaver.ast.Or;
+
 @Entity
 @Table(name = "orders")
 @Data
@@ -11,5 +13,10 @@ public class Order {
 	private Long orderId;
 	private Long productId;
 	private Integer quantity;
-	private String status;
+	private OrderStatus status;
+
+	public enum OrderStatus {
+		CREATED,
+		CANCELLED
+	}
 }
