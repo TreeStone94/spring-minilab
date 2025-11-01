@@ -47,7 +47,7 @@ public class SagaOrchestrator {
 			orchestratorProducer.sendToPaymentService(paymentCommand);
 		} else {
 			// 주문 실패 -> Saga 실패 상태로 변경
-			sagaState.setStatus(SagaState.SagaStatus.FAILED);
+			sagaState.setStatus(SagaState.SagaStatus.ORDER_FAILED);
 			sagaStateRepository.save(sagaState);
 			log.error("Order failed, ending saga for sagaId: {}", reply.sagaId());
 		}
@@ -69,7 +69,7 @@ public class SagaOrchestrator {
 	       orchestratorProducer.sendToStockService(stockCommand);
        } else {
            // 결제 실패 -> 상태 변경 및 주문 취소(보상) 요청
-           sagaState.setStatus(SagaState.SagaStatus.COMPENSATING_ORDER);
+           sagaState.setStatus(SagaState.SagaStatus.PAYMENT_FAILED);
            sagaStateRepository.save(sagaState);
 
            log.error("Payment failed, compensating order for sagaId: {}", reply.sagaId());
@@ -86,12 +86,12 @@ public class SagaOrchestrator {
 
 		if ("STOCK_DECREASED".equals(reply.status())) {
 			// 재고 감소 성공 -> Saga 완료
-			sagaState.setStatus(SagaState.SagaStatus.COMPLETED);
+			sagaState.setStatus(SagaState.SagaStatus.COMPENSATING_STOCK);
 			sagaStateRepository.save(sagaState);
 			log.error("Saga completed successfully for sagaId: {}", reply.sagaId());
 		} else {
 			// 재고 부족 -> 상태 변경 및 결제 환불(보상) 요청
-			sagaState.setStatus(SagaState.SagaStatus.COMPENSATING_PAYMENT);
+			sagaState.setStatus(SagaState.SagaStatus.STOCK_FAILED);
 			sagaStateRepository.save(sagaState);
 
 			log.error("Stock failed, compensating payment and order for sagaId: {}", reply.sagaId());
