@@ -40,11 +40,10 @@ public class PaymentService {
     }
 
     public void refundPayment(PaymentRequest event) {
-        Payment payment = paymentRepository.findById(event.sagaId()).orElse(null);
-        if (payment == null) {
+        Payment payment = paymentRepository.findBySagaId(event.sagaId());
+        if (payment != null) {
             payment.setStatus(Payment.PaymentStatus.REFUNDED);
+            paymentRepository.save(payment);
         }
-
-        paymentRepository.save(payment);
     }
 }
