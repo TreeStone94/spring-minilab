@@ -40,7 +40,6 @@ curl -X POST http://localhost:8080/saga/order \
 결제 서비스에서 오류가 발생하여 보상 트랜잭션이 실행되는 시나리오입니다.
 
 ```bash
-# 이 예제에서는 특정 상품 ID 또는 수량에 따라 실패를 시뮬레이션할 수 있습니다.
 # (예: sagaId가 홀수 일때 결제 실패)
 curl -X POST http://localhost:8080/saga/order \
 -H "Content-Type: application/json" \
