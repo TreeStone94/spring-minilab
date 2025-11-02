@@ -4,6 +4,6 @@ public record OrderServiceRequest(
 	String command,
 	Long sagaId,
 	Long productId,
-	int quantity
+	Integer quantity
 ) implements SagaServiceRequest {
 }

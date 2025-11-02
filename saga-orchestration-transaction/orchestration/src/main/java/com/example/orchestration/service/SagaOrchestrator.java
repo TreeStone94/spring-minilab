@@ -29,7 +29,7 @@ public class SagaOrchestrator {
 		log.error("Saga started. SagaId: {}", savedSagaState.getSagaId());
 	}
 
-	@KafkaListener(topics = "order-replies")
+	@KafkaListener(topics = "order-replies", containerFactory = "orderReplyListenerContainerFactory")
 	@Transactional
 	public void handleOrderReply(OrderReply reply) {
 		SagaState sagaState = sagaStateRepository.findById(reply.sagaId()).orElse(null);
@@ -53,7 +53,7 @@ public class SagaOrchestrator {
 		}
 	}
 
-	@KafkaListener(topics = "payment-replies")
+	@KafkaListener(topics = "payment-replies", containerFactory = "paymentReplyListenerContainerFactory")
    @Transactional
    public void handlePaymentReply(PaymentReply reply) {
        SagaState sagaState = sagaStateRepository.findById(reply.sagaId()).orElse(null);
@@ -78,7 +78,7 @@ public class SagaOrchestrator {
        }
    }
 
-	@KafkaListener(topics = "stock-replies")
+	@KafkaListener(topics = "stock-replies", containerFactory = "stockReplyListenerContainerFactory")
 	@Transactional
 	public void handleStockReply(StockReply reply) {
 		SagaState sagaState = sagaStateRepository.findById(reply.sagaId()).orElse(null);

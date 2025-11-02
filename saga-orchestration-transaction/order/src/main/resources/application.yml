@@ -27,4 +27,4 @@ spring:
       properties:
         spring.json.trust.packages: "*"
         spring.json.use.type.headers: false
-        spring.json.value.default.type: com.example.order.dto.ServiceRequest
+        spring.json.value.default.type: com.example.order.dto.OrderRequest

@@ -13,5 +13,5 @@ public class Stock {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Long productId;
-	private int quantity;
+	private Integer quantity;
 }

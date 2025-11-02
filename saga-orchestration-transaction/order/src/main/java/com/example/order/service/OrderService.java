@@ -18,7 +18,7 @@ public class OrderService {
 	@Transactional
 	public void createOrder(OrderRequest request) {
 		Order order = new Order();
-		order.setOrderId(request.sagaId());
+		order.setSagaId(request.sagaId()); // sagaId 설정
 		order.setProductId(request.productId());
 		order.setQuantity(request.quantity());
 		order.setStatus(Order.OrderStatus.CREATED);
@@ -26,15 +26,17 @@ public class OrderService {
 
 		OrderReply orderReply = new OrderReply(request.sagaId(), "ORDER_CREATED");
 		orderProducer.sendOrderReply(orderReply);
-
 	}
 
 	@Transactional
 	public void cancelOrder(OrderRequest request) {
-		Order order = orderRepository.findById(request.sagaId()).orElse(null);
+		Order order = orderRepository.findBySagaId(request.sagaId()).orElse(null);
 		if (order != null) {
 			order.setStatus(Order.OrderStatus.CANCELLED);
 			orderRepository.save(order);
+
+			OrderReply orderReply = new OrderReply(request.sagaId(), "ORDER_CANCELLED");
+			orderProducer.sendOrderReply(orderReply);
 		}
 	}
 }

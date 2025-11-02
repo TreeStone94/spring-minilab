@@ -13,9 +13,9 @@ public class StockConsumer {
 
 	@KafkaListener(topics = "stock-requests")
 	public void handleStockRequest(StockRequest request) {
-		if ("DECREASE_STOCK".equals(request.type())) {
+		if ("DECREASE_STOCK".equals(request.command())) {
 			stockService.decreaseStock(request);
-		} else if ("INCREASE_STOCK".equals(request.type())) {
+		} else if ("INCREASE_STOCK".equals(request.command())) {
 			stockService.increaseStock(request);
 		}
 	}

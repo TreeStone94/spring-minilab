@@ -4,6 +4,6 @@ public record StockServiceRequest(
 	String command,
 	Long sagaId,
 	Long productId,
-	int quantity
+	Integer quantity
 ) implements SagaServiceRequest {
 }

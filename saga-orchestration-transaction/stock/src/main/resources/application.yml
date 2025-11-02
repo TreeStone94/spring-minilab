@@ -1,11 +1,11 @@
 server:
-  port: 8082
+  port: 8083
 
 spring:
   application:
-    name: payment-service
+    name: stock-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/transaction?currentSchema=payment
+    url: jdbc:postgresql://localhost:5432/transaction?currentSchema=stock
     username: admin
     password: admin1!
     driver-class-name: org.postgresql.Driver
@@ -20,10 +20,10 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       bootstrap-servers: localhost:9092
-      group-id: payment-group
+      group-id: stock-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trust.packages: "*"
-        spring.json.value.default.type: com.example.payment.dto.PaymentRequest
+        spring.json.value.default.type: com.example.stock.dto.StockRequest

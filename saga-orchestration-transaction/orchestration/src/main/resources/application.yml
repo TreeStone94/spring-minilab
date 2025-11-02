@@ -12,19 +12,15 @@ spring:
       ddl-auto: update
     show-sql: true
   kafka:
+    # Producer 설정은 그대로 둡니다.
     producer:
       bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
+        # 다른 서비스에서 타입 헤더를 보내지 않으므로, 여기서도 보내지 않도록 통일합니다.
         spring.json.add.type.headers: false
+
+    # Consumer 관련 설정은 KafkaConsumerConfig.java에서 모두 처리하므로 여기서는 제거합니다.
     consumer:
       bootstrap-servers: localhost:9092
-      group-id: orchestrator-group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trust.packages: "*"
-        spring.json.use.type.headers: false
-        spring.json.value.default.type: com.example.orchestration.dto.OrderReply

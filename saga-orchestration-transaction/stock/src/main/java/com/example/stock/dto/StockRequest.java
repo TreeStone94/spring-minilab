@@ -1,4 +1,8 @@
 package com.example.stock.dto;
 
-public record StockRequest(String type, Long sagaId, Long productId, int quantity) {
+public record StockRequest(
+		String command,
+		Long sagaId,
+		Long productId,
+		Integer quantity) {
 }
