@@ -18,13 +18,21 @@ public class OrderService {
 	@Transactional
 	public void createOrder(OrderRequest request) {
 		Order order = new Order();
-		order.setSagaId(request.sagaId()); // sagaId 설정
+		order.setSagaId(request.sagaId());
 		order.setProductId(request.productId());
 		order.setQuantity(request.quantity());
-		order.setStatus(Order.OrderStatus.CREATED);
 		orderRepository.save(order);
 
-		OrderReply orderReply = new OrderReply(request.sagaId(), "ORDER_CREATED");
+		// 실패 처리
+		String command = "ORDER_CREATED";
+		if (request.productId() % 2 == 0) {
+			order.setStatus(Order.OrderStatus.FAILED);
+			command = "ORDER_FAILED";
+		} else {
+			order.setStatus(Order.OrderStatus.CREATED);
+		}
+
+		OrderReply orderReply = new OrderReply(request.sagaId(), command);
 		orderProducer.sendOrderReply(orderReply);
 	}
 
@@ -34,9 +42,6 @@ public class OrderService {
 		if (order != null) {
 			order.setStatus(Order.OrderStatus.CANCELLED);
 			orderRepository.save(order);
-
-			OrderReply orderReply = new OrderReply(request.sagaId(), "ORDER_CANCELLED");
-			orderProducer.sendOrderReply(orderReply);
 		}
 	}
 }

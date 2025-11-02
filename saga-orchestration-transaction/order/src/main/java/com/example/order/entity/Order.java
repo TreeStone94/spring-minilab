@@ -18,6 +18,7 @@ public class Order {
 
 	public enum OrderStatus {
 		CREATED,
-		CANCELLED
+		CANCELLED,
+		FAILED
 	}
 }

@@ -45,7 +45,7 @@ public class SagaOrchestrator {
 			log.error("Order created, processing payment for sagaId: {}", reply.sagaId());
 			PaymentServiceRequest paymentCommand = new PaymentServiceRequest("PROCESS_PAYMENT", reply.sagaId(), sagaState.getProductId());
 			orchestratorProducer.sendToPaymentService(paymentCommand);
-		} else {
+		} else if("ORDER_FAILED".equals(reply.status())){
 			// 주문 실패 -> Saga 실패 상태로 변경
 			sagaState.setStatus(SagaState.SagaStatus.ORDER_FAILED);
 			sagaStateRepository.save(sagaState);
